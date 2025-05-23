@@ -42,9 +42,12 @@ $imageUrl = getImageUrl($product['image_path']);
             <h4 class="text-body-secondary"><?php echo $formattedAmount = $pesoFormatter->formatCurrency($product['price'], 'PHP'); ?></h4>
             <p><?php echo $product['description']; ?></p>
             <div class="d-flex gap-3">
-                <a href="..//classes/cart-process.php" class="btn btn-success add-to-cart" data-productid="<?php echo $product['id'] ?>" data-quantity="1">Add to Cart</a>
-                <a href="..//classes/direct-checkout.php?product_id=<?php echo $product['id']; ?>&quantity=1" class="btn btn-warning">Buy Now</a>
-               
+                <?php if (isset($_SESSION['user'])): ?>
+                    <a href="..//classes/cart-process.php" class="btn btn-success add-to-cart" data-productid="<?php echo $product['id'] ?>" data-quantity="1">Add to Cart</a>
+                    <a href="..//classes/direct-checkout.php?product_id=<?php echo $product['id']; ?>&quantity=1" class="btn btn-warning">Buy Now</a>
+                <?php else: ?>
+                    <a href="../auth/login.php" class="btn btn-primary">Login to Purchase</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

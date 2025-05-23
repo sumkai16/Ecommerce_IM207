@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2025 at 03:40 PM
+-- Generation Time: May 23, 2025 at 04:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,16 +42,10 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `user_id`, `session_id`, `product_id`, `quantity`, `created_at`, `updated_at`) VALUES
-(15, 2, '683056589dc58', 6, 3, '2025-05-23 21:12:48', '2025-05-23 21:12:48'),
-(16, 2, '683056589dc58', 2, 2, '2025-05-23 21:15:07', '2025-05-23 21:15:07'),
-(17, 2, '683056589dc58', 3, 1, '2025-05-23 21:15:12', '2025-05-23 21:15:12'),
-(18, 2, '683056589dc58', 4, 1, '2025-05-23 21:15:15', '2025-05-23 21:15:15'),
-(19, 2, '683056589dc58', 8, 2, '2025-05-23 21:15:56', '2025-05-23 21:15:56'),
-(20, 2, '683056589dc58', 7, 1, '2025-05-23 21:19:19', '2025-05-23 21:19:19'),
-(21, 1, '683076cd5f8cd', 10, 1, '2025-05-23 21:24:09', '2025-05-23 21:24:09'),
-(22, 1, '683056589dc58', 5, 1, '2025-05-23 21:37:22', '2025-05-23 21:37:22'),
-(23, 1, '683079d44fc29', 2, 1, '2025-05-23 21:38:25', '2025-05-23 21:38:25'),
-(24, 1, '683079d44fc29', 6, 1, '2025-05-23 21:38:29', '2025-05-23 21:38:29');
+(27, 1, '683056589dc58', 1, 1, '2025-05-23 22:00:55', '2025-05-23 22:00:55'),
+(28, 1, '683056589dc58', 2, 2, '2025-05-23 22:01:04', '2025-05-23 22:01:04'),
+(29, 1, '683056589dc58', 3, 1, '2025-05-23 22:02:50', '2025-05-23 22:02:50'),
+(30, 1, '683056589dc58', 4, 2, '2025-05-23 22:03:54', '2025-05-23 22:03:54');
 
 -- --------------------------------------------------------
 
@@ -94,7 +88,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`id`, `customer_id`, `guest_name`, `guest_phone`, `guest_address`, `total`, `created_at`, `updated_at`, `status_id`, `email`, `notes`, `shipping_fee`, `payment_method`) VALUES
 (21, 1, 'Axcee Cabusas', '9914082061', 'Tunghaan Cebu', 499.00, '2025-05-23 20:39:58', '2025-05-23 20:39:58', 1, '', '', 0.00, 'COD'),
-(22, 2, 'Axcee Cabusas', '9914082061', 'Tunghaan Cebu', 499.00, '2025-05-23 20:50:08', '2025-05-23 20:50:08', 1, 'axcee1@gmail.com', '', 0.00, 'COD');
+(22, 2, 'Axcee Cabusas', '9914082061', 'Tunghaan Cebu', 499.00, '2025-05-23 20:50:08', '2025-05-23 20:50:08', 1, 'axcee1@gmail.com', '', 0.00, 'COD'),
+(23, 1, 'Axcee Cabusas', '9914082061', 'Tunghaan Cebu', 499.00, '2025-05-23 22:07:49', '2025-05-23 22:07:49', 1, 'axcee@gmail.com', '', 0.00, 'COD');
 
 -- --------------------------------------------------------
 
@@ -117,7 +112,8 @@ CREATE TABLE `order_details` (
 
 INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `quantity`, `price`, `subtotal`) VALUES
 (21, 21, 2, 1, 499.00, 499.00),
-(22, 22, 2, 1, 499.00, 499.00);
+(22, 22, 2, 1, 499.00, 499.00),
+(23, 23, 2, 1, 499.00, 499.00);
 
 -- --------------------------------------------------------
 
@@ -379,7 +375,7 @@ ALTER TABLE `user_profiles`
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -391,13 +387,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `order_items`

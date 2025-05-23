@@ -21,6 +21,12 @@ if (!$productId || $quantity < 1) {
     exit;
 }
 
+// Check if user is logged in
+if (!isset($_SESSION['user'])) {
+    echo json_encode(['status' => 'error', 'message' => 'You must be logged in to add items to the cart']);
+    exit;
+}
+
 // Database connection
 require_once __DIR__ . '/../app/includes/database.php';
 require_once __DIR__ . '/CartClass.php';
