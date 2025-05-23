@@ -1,4 +1,4 @@
-<?php include 'helpers/functions.php'; ?>
+<?php include '../helpers/functions.php'; ?>
 <?php template('header.php'); ?>
 <?php
 
@@ -19,37 +19,41 @@ $amounLocale = 'en_PH';
 $pesoFormatter = new NumberFormatter($amounLocale, NumberFormatter::CURRENCY);
 
 if(isset($_POST['submit'])) {
-    $name = $_POST['name'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
+    try {
+        $name = $_POST['name'];
+        $address = $_POST['address'];
+        $phone = $_POST['phone'];
 
-    if(isset($_SESSION['user'])) {
-        $orderId = $checkout->userCheckout([
-            'user_id' => $_SESSION['user']['id'],
-            'total' => $superTotal
-        ]);
-    } else {
-        $orderId = $checkout->guestCheckout([
-            'name' => $name,
-            'address' => $address,
-            'phone' => $phone,
-            'total' => $superTotal
-        ]);
+        if(isset($_SESSION['user'])) {
+            $orderId = $checkout->userCheckout([
+                'user_id' => $_SESSION['user']['id'],
+                'total' => $superTotal
+            ]);
+        } else {
+            $orderId = $checkout->guestCheckout([
+                'name' => $name,
+                'address' => $address,
+                'phone' => $phone,
+                'total' => $superTotal
+            ]);
+        }
+
+        foreach($_SESSION['cart'] as $item) {
+            $checkout->saveOrderDetails([
+                'order_id' => $orderId,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+                'subtotal' => $item['total'] * $item['quantity']
+            ]);
+        }
+
+        unset($_SESSION['cart']);
+
+        echo "<script>alert('Order placed successfully!'); window.location.href='/main/order-confirmation.php?order_id=" . $orderId . "'</script>";
+    } catch (Exception $e) {
+        echo "<script>alert('Error placing order: " . $e->getMessage() . "');</script>";
     }
-
-    foreach($_SESSION['cart'] as $item) {
-        $checkout->saveOrderDetails([
-            'order_id' => $orderId,
-            'product_id' => $item['product_id'],
-            'quantity' => $item['quantity'],
-            'price' => $item['price'],
-            'subtotal' => $item['total'] * $item['quantity']
-        ]);
-    }
-
-    unset($_SESSION['cart']);
-
-    echo "<script>alert('Order placed successfully!'); window.location.href='/index.php'</script>";
 }
 
 ?>
@@ -106,22 +110,43 @@ if(isset($_POST['submit'])) {
             <h2>Shipping Information</h2>
             <?php if(countCart() == 0): ?>
                 <p>Your cart is empty.</p>
-                <a href="index.php" class="btn btn-primary">Continue Shopping</a>
+                <a href="../main/index.php" class="btn btn-primary">Continue Shopping</a>
             <?php else: ?>
                 <form action="checkout.php" method="POST">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Full Name</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email (optional)</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address (Street, City, Province, Zip Code)</label>
                         <input type="text" class="form-control" id="address" name="address" required>
                     </div>
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone" required>
+                        <label for="notes" class="form-label">Notes (optional)</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-success" name="submit">Place Order</button>
+                    <div class="mb-3">
+                        <label>Payment Method</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
+                            <label class="form-check-label" for="cod">
+                                Cash on Delivery (COD)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                        <label class="form-check-label" for="terms">I agree to the terms and conditions</label>
+                    </div>
+                    <button type="submit" class="btn btn-success" name="submit">Place Order (COD)</button>
                     <a href="cart.php" class="btn btn-primary">View Cart</a>
                 </form>
             <?php endif; ?>

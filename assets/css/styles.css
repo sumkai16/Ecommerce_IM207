@@ -1,3 +1,202 @@
-.store-body {
-  background-color: #e2e2e2
+/* Base styles */
+body {
+  background: linear-gradient(135deg, #f3e6f5, #e6d1f2); /* pastel pink-purple gradient */
+  font-family: 'Poppins', 'Quicksand', 'Nunito', sans-serif;
+  color: #4a4a4a;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Container */
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Header, Navbar, Footer */
+header, nav, footer {
+  background-color: #f6e6fa; /* pastel lavender */
+  box-shadow: 0 2px 8px rgba(182, 150, 212, 0.3); /* soft purple shadow */
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+nav a, footer a {
+  color: #b18cd9; /* pastel purple */
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+nav a:hover, footer a:hover {
+  color: #d1b3f0; /* lighter pastel purple */
+}
+
+/* Buttons */
+button, .btn {
+  background: linear-gradient(135deg, #d8b4e2, #a67fb5); /* pastel purple to pink */
+  border: none;
+  border-radius: 16px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  color: #4a2c6b; /* dark purple */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(166, 127, 181, 0.4);
+  transition: all 0.3s ease;
+}
+
+button:hover, .btn:hover {
+  background: linear-gradient(135deg, #a67fb5, #d8b4e2);
+  box-shadow: 0 6px 12px rgba(166, 127, 181, 0.6);
+  transform: scale(1.05);
+}
+
+/* Cards */
+.card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(166, 127, 181, 0.15);
+  padding: 1rem;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 24px rgba(166, 127, 181, 0.3);
+  transform: translateY(-8px);
+}
+
+.card img {
+  border-radius: 12px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: #a67fb5; /* pastel purple */
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+p {
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+}
+
+/* Links */
+a {
+  color: #b18cd9;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #d1b3f0;
+}
+
+/* Inputs */
+input[type="text"], input[type="email"], input[type="password"], select, textarea {
+  border: 2px solid #d1b3f0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+  border-color: #a67fb5;
+  outline: none;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #f6e6fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(182, 150, 212, 0.3);
+  padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: #a67fb5 !important;
+}
+
+.nav-link {
+  color: #b18cd9 !important;
+  font-weight: 600;
+  margin-right: 1rem;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #d1b3f0 !important;
+}
+
+/* Badge */
+.badge {
+  background-color: #a67fb5;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 0.25rem 0.75rem;
+}
+
+/* Floating pastel blob background */
+.floating-blob {
+  position: fixed;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at center, #d8b4e2, transparent 70%);
+  border-radius: 50%;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
+  animation: floatBlob 6s ease-in-out infinite;
+}
+
+@keyframes floatBlob {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(20px) translateX(20px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .card {
+    margin-bottom: 1.5rem;
+  }
+  .navbar-nav {
+    flex-direction: column;
+  }
+  .nav-link {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Sticky footer styles */
+body.store-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1;
 }

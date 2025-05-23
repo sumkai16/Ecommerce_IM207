@@ -1,31 +1,50 @@
 <?php
-   
-   require 'vendor/autoload.php';
+session_start();
 
-    use Aries\MiniFrameworkStore\Models\Product;
+header('Content-Type: application/json');
 
-    session_start();
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    $product_id = intval($_POST['productId']);
-    $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    exit;
+}
 
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = [];
+$productId = $_POST['productId'] ?? null;
+$quantity = intval($_POST['quantity'] ?? 1);
+
+if (!$productId || $quantity < 1) {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid product ID or quantity']);
+    exit;
+}
+
+// Database connection
+require_once __DIR__ . '/../app/includes/database.php';
+require_once __DIR__ . '/Cart.php';
+
+use Aries\MiniFrameworkStore\Includes\Database;
+
+$dbInstance = new Database();
+$db = $dbInstance->getConnection();
+
+try {
+    $cart = new Cart($db);
+    $userId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : null;
+    $result = $cart->addItem($productId, $quantity);
+    ob_clean();
+    $cartCount = count($cart->getItems());
+    if ($result) {
+        echo json_encode(['status' => 'success', 'message' => 'Product added to cart', 'userId' => $userId, 'cartCount' => $cartCount]);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to add product to cart', 'userId' => $userId, 'cartCount' => $cartCount]);
     }
-
-    $product = new Product();
-    $productDetails = $product->getById($_POST['productId']);
-
-    // Ensure the cart only includes product ID and quantity
-    $_SESSION['cart'][$product_id] = [
-        'product_id' => $product_id,
-        'quantity' => $quantity,
-        'name' => $productDetails['name'],
-        'price' => $productDetails['price'],
-        'image_path' => $productDetails['image_path'],
-        'total' => $productDetails['price'] * $quantity
-    ];
-
-    echo json_encode(['status' => 'success', 'message' => 'Product added to cart']);
-
-?>
+} catch (Exception $e) {
+    ob_clean();
+    error_log($e->getMessage());
+    error_log($e->getTraceAsString());
+    echo json_encode(['status' => 'error', 'message' => 'An error occurred while processing your request.']);
+    exit;
+}

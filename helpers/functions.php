@@ -5,14 +5,22 @@ function assets($path) {
 }
 
 function template($path) {
-    include 'templates/' . $path;
+    include __DIR__ . '/../templates/' . $path;
 }
 
 function countCart() {
-    if (isset($_SESSION['cart'])) {
-        return count($_SESSION['cart']);
+    global $db;
+    if (!isset($db)) {
+        if (isset($GLOBALS['db'])) {
+            $db = $GLOBALS['db'];
+        } else {
+            return 0;
+        }
     }
-    return 0;
+    require_once __DIR__ . '/../classes/Cart.php';
+    $cart = new Cart($db);
+    $items = $cart->getItems();
+    return count($items);
 }
 
 function isLoggedIn() {

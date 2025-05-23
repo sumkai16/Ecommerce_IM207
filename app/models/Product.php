@@ -30,25 +30,25 @@ class Product extends Database
         ]);
         return $this->db->lastInsertId();
     }
-    public function update()
+    public function update($id, $data)
     {
-        $sql = "UPDATE products SET name = :name, description = :description, price = :price, image_url = :image_url WHERE id = :id";
+        $sql = "UPDATE products SET name = :name, description = :description, price = :price, image_path = :image_path WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'price' => $this->price,
-            'image_url' => $this->image_url
+            'id' => $id,
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+            'image_path' => $data['image_path']
         ]);
         return "Record UPDATED successfully";
     }
-    public function delete()
+    public function delete($id)
     {
         $sql = "DELETE FROM products WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'id' => $this->id
+            'id' => $id
         ]);
         return "Record DELETED successfully";
     }
@@ -90,12 +90,18 @@ class Product extends Database
 
     public function getByCategory($category_name)
     {
-        $sql = "SELECT products.id, products.name, products.price, products.description, products.image_path FROM products JOIN product_categories ON products.category_id = product_categories.id WHERE product_categories.name = :category_name";
+        $sql = "SELECT products.id, products.name, products.price, products.description, products.image_path FROM products JOIN product_categories ON products.category_id = product_categories.id WHERE LOWER(product_categories.name) = LOWER(:category_name)";
+        error_log("Executing SQL: " . $sql . " with category_name: " . $category_name);
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'category_name' => $category_name
         ]);
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        error_log("Products fetched count: " . count($results));
+        foreach ($results as $product) {
+            error_log("Product ID: " . $product['id'] . ", Name: " . $product['name']);
+        }
+        return $results;
     }
 
 }

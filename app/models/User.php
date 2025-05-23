@@ -14,7 +14,11 @@ class User extends Database {
     }
 
     public function login($data) {
-        $sql = "SELECT u.*, up.address, up.phone, up.birthdate FROM users u LEFT JOIN user_profiles up ON u.id = up.user_id WHERE u.email = :email";
+        $sql = "SELECT u.*, up.address, up.phone, up.birthdate, r.name as role 
+                FROM users u 
+                LEFT JOIN user_profiles up ON u.id = up.user_id 
+                LEFT JOIN roles r ON u.role_id = r.id 
+                WHERE u.email = :email";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'email' => $data['email'],
@@ -25,18 +29,21 @@ class User extends Database {
     public function register($data) {
         $this->db->beginTransaction();
         try {
-            $sqlUser = "INSERT INTO users (name, email, password, created_at, updated_at) VALUES (:name, :email, :password, :created_at, :updated_at)";
+            $sqlUser = "INSERT INTO users (name, email, password, role_id, created_at, updated_at) 
+                       VALUES (:name, :email, :password, :role_id, :created_at, :updated_at)";
             $stmtUser = $this->db->prepare($sqlUser);
             $stmtUser->execute([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => password_hash($data['password'], PASSWORD_BCRYPT),
+                'role_id' => 2, // 2 is the ID for 'customer' role
                 'created_at' => $data['created_at'],
                 'updated_at' => $data['updated_at']
             ]);
             $userId = $this->db->lastInsertId();
 
-            $sqlProfile = "INSERT INTO user_profiles (user_id, address, phone, birthdate) VALUES (:user_id, :address, :phone, :birthdate)";
+            $sqlProfile = "INSERT INTO user_profiles (user_id, address, phone, birthdate) 
+                          VALUES (:user_id, :address, :phone, :birthdate)";
             $stmtProfile = $this->db->prepare($sqlProfile);
             $stmtProfile->execute([
                 'user_id' => $userId,

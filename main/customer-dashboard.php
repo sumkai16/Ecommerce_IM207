@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'customer') {
     header('Location: ../auth/login.php');
     exit;
 }
@@ -14,17 +14,17 @@ template('header.php');
 use Aries\MiniFrameworkStore\Models\Checkout;
 
 $orders = new Checkout();
+$userId = $_SESSION['user']['id'];
 
 ?>
 
 <div class="container my-5">
-    <h2>Order History</h2>
-    <p>Here are past orders made on the site:</p>
+    <h2>My Orders</h2>
+    <p>Here are your past orders:</p>
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Order ID</th>
-                <th>User</th>
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Total Price</th>
@@ -33,10 +33,9 @@ $orders = new Checkout();
         </thead>
         <tbody>
             <?php
-            foreach ($orders->getAllOrders() as $order) {
+            foreach ($orders->getOrdersByUserId($userId) as $order) {
                 echo '<tr>';
                 echo '<td>' . htmlspecialchars($order['id']) . '</td>';
-                echo '<td>' . htmlspecialchars($order['user_name']) . '</td>';
                 echo '<td>' . htmlspecialchars($order['product_name']) . '</td>';
                 echo '<td>' . htmlspecialchars($order['quantity']) . '</td>';
                 echo '<td>' . htmlspecialchars($order['total_price']) . '</td>';

@@ -9,7 +9,7 @@ class Database {
     private $host = "localhost";
     private $db_name = "ecommerce_cabusas";
     private $username = "root";
-    private $password = "P@ssword123";
+    private $password = "";
     protected $conn;
 
     public function __construct() {
