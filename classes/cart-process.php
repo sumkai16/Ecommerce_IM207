@@ -3,10 +3,10 @@ session_start();
 
 header('Content-Type: application/json');
 
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Disable error display to prevent breaking JSON response
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
@@ -23,7 +23,7 @@ if (!$productId || $quantity < 1) {
 
 // Database connection
 require_once __DIR__ . '/../app/includes/database.php';
-require_once __DIR__ . '/Cart.php';
+require_once __DIR__ . '/CartClass.php';
 
 use Aries\MiniFrameworkStore\Includes\Database;
 
@@ -34,7 +34,7 @@ try {
     $cart = new Cart($db);
     $userId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : null;
     $result = $cart->addItem($productId, $quantity);
-    ob_clean();
+    // ob_clean(); // Removed to avoid clearing output buffer prematurely
     $cartCount = count($cart->getItems());
     if ($result) {
         echo json_encode(['status' => 'success', 'message' => 'Product added to cart', 'userId' => $userId, 'cartCount' => $cartCount]);
@@ -42,7 +42,7 @@ try {
         echo json_encode(['status' => 'error', 'message' => 'Failed to add product to cart', 'userId' => $userId, 'cartCount' => $cartCount]);
     }
 } catch (Exception $e) {
-    ob_clean();
+    // ob_clean(); // Removed to avoid clearing output buffer prematurely
     error_log($e->getMessage());
     error_log($e->getTraceAsString());
     echo json_encode(['status' => 'error', 'message' => 'An error occurred while processing your request.']);

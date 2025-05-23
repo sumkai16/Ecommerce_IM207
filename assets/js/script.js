@@ -26,12 +26,15 @@
                 credentials: 'same-origin'
             })
             .then(response => {
+                console.log('Fetch response status:', response.status);
                 return response.text().then(text => {
+                    console.log('Fetch response text:', text);
                     try {
                         return JSON.parse(text);
                     } catch (e) {
                         console.error('Failed to parse JSON:', text);
-                        throw e;
+                        // Instead of throwing, return an error object to handle gracefully
+                        return { status: 'error', message: 'Invalid JSON response from server' };
                     }
                 });
             })
@@ -44,7 +47,7 @@
                         cartBadge.textContent = data.cartCount;
                     }
                 } else {
-                    alert('Failed to add product to cart.');
+                    alert('Failed to add product to cart: ' + (data.message || 'Unknown error'));
                 }
             })
             .catch(error => {
